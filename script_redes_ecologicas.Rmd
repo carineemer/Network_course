@@ -20,20 +20,17 @@ No final do curso o aluno será capaz de:
 
 ##########################################################################
 __________________________________________________________________________
-Warning 1: this script works both with binary and weighted networks.
+Warning 1: this script works for both binary and weighted networks.
 
-Warning 2: this script was designed for two-mode (bipartite) networks,
-but some functions work also for one-mode (unipartite) networks.
-
-Warning 3: there is no single magic way to draw all kinds of network.
+Warning 2: there is no single magic way to draw all kinds of network.
 There are several network drawing methods implemented in R packages
 and stand-alone software. Study their logic and algorithms,
 see some papers in which they were used, think it through,
-and only then decide which drawing method to use in your study.
+and only then decide which drawing method to use in your study.(M. Mello)
 
-Warning 4: Null models are an endless discussion in Ecology. The choice of null models depends on your question, but is essential to test the significance of the data. Chose carefully, based on the biological meanings of the randomization process.
+Warning 3: Null models are an endless discussion in Ecology. The choice of null models depends on your question, but is essential to test the significance of the data. Chose carefully, based on the biological meanings of the randomization process.
 
-Warning 5: always check for updates of packages and R, specially if you start to have weird errors.
+Warning 4: always check for updates of packages and R versions, specially if you start to have weird errors.
 
 #Have fun!
 
@@ -41,7 +38,6 @@ Warning 5: always check for updates of packages and R, specially if you start to
 
 
 ```{r setup, echo=T, include = F}
-
 # Set the working directory
 #setwd("paste your working directory path here")
 setwd("~/Documents/Documents - Girassol/Network course/Curso Redes UESC 2018/práticas R/data")
@@ -50,6 +46,7 @@ knitr::opts_knit$set(root.dir = "~/Documents/Documents - Girassol/Network course
 
 
 ```{r load packages, include = F, echo = T}
+# load packages
 library(bipartite)
 library(vegan)
 library(reshape2)
@@ -59,7 +56,10 @@ library(reshape2)
 ```
 
 ```{r input data, echo=T, include = F}
-### add networks
+### input data
+
+### you can use the dataset available or your own data. To do so, just replace "the name within brackets" below for your won.
+
 ### Binary networks - qualitative data
 poll_b<-read.csv("pollination_NewZealand_bin.csv", head=T,row.names=1)
 ants_b<-read.csv("ants_Amazon_bin.csv", head=T,row.names=1)
@@ -84,9 +84,9 @@ Drawing networks
 
 ```{r plot networks bipartite}
 
-#### Observed the topological differences between binary and weighted networks for the different systems
+#### Observe topological differences between binary and weighted networks for the different systems
 
-#### Invaded pollination network of sub-alpine vegetation, New Zealand
+#### Invaded pollination network from a sub-alpine vegetation, New Zealand (Emer et al. 2016. DOI: 10.1111/ddi.12458)
 poll_network<-plotweb(poll,
               ## set overall parameters 
               text.rot=c(90), labsize=1,arrow="down.center",
@@ -99,7 +99,7 @@ poll_network<-plotweb(poll,
               ### set colors
                   col.low="green", col.high="yellow", col.interaction = "grey80")
 
-#### Network of ant-plant interactions in a dam-fragmented island of Balbina, Central Amazon
+#### Network of ant-myrmecophyte interactions from a dam-fragmented island in Balbina, Central Amazon (Emer et al. 2013. DOI: 10.1111/cobi.12045).
 
 # vectors for all colours can be given, to mark certain species or 
 # interactions. Colour vectors are recycled if not of appropriate length - BE CAREFULL
@@ -114,14 +114,14 @@ myrm_network<-plotweb(ants,text.rot=c(90),            labsize=1,y.width.low=0.05
                       col.interaction = my.col)
 
 
-#### Avian seed-dispersal network from the Ilha Anchieta, Atlantic Forest
+#### Avian seed-dispersal network from Ilha Anchieta, Atlantic Forest (Bello et al. 2017. DOI doi/10.1002/ecy.1818/).
 seed_network<-plotweb(seed,text.rot=c(90),labsize=1,y.width.low=0.05,y.width.high=0.05,
         arrow="down.center",ybig=1.8, low.y=1.2, high.y=2, high.spacing=.01, low.spacing=0.01,
         method="cca", ### check the method if you prefer
         col.low="green", col.high="yellow", col.interaction = "grey80")
 
 #export the image
-png('seed_network.png')
+#png('seed_network.png')
        
 #dev.off()
 # Tip: There are many other parameters that can be set to customize the drawing.
