@@ -132,6 +132,7 @@ seed_network<-plotweb(seed,text.rot=c(90),labsize=1,y.width.low=0.05,y.width.hig
 
 ```{r plot networks igraph}
 ### some more complex but flexible ways of drawing networks
+# ??str.igraph
 ### code needs update to differentiate plants and animals
 m<- read.csv("ants_Amazon.csv", head=T)
 clos<-read.csv("closeness_ants.csv", head=T)
@@ -192,8 +193,22 @@ plot(g,
      vertex.label.cex=0.5
            )
 #export the image
-png('antplant_network.png')
+#png('antplant_network.png')
 
+############################## BIPARTITE NETWORKS W/ IGRAPH #########
+V(g)$type <- V(g)$name %in% m2[,1]
+bipartite.projection(g)
+V(g)$x <- V(g)
+V(g)$y <- E(g)
+col <- c("steelblue", "orange")
+shape <- c("circle", "square")
+
+V(g)$shape <- shape[as.numeric(V(g)$type) + 1]
+V(g)$color <- c('red', 'blue', 'green', 'steelblue', 'steelblue', 'steelblue', 'steelblue')
+E(g)$color <- 'gray'
+plot(g)
+
+  
 ```
 
 ```{r plot networks network3D}
@@ -291,10 +306,11 @@ clos_ants<-specieslevel(ants,index = "closeness", level= "higher")
 
 ########## Estimating hubs and connectors according to Olensen et al. 2007, PNAS.
 cz <- czvalues(m_ants)
-plot(cz[[1]], cz[[2]], pch=16, xlab="c", ylab="z", cex=0.8, xlim=c(0,1), las=1)
+plot(cz[[1]], cz[[2]], pch=16, xlab="c, participation coefficient P", ylab="z, within-module degree", cex=0.8, xlim=c(-1,2.5), las=1, ylim= c(-1.5,4))
 abline(v=0.62) # threshold of Olesen et al. 2007
 abline(h=2.5)   # dito
 text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.7)
+
 
 
 
@@ -330,6 +346,7 @@ robustness(ants.extlower.r)
 slope.bipartite(ants.extlower.r, pch=19, cex=.5)
 #dev.off()
 
+??str.igraph
 
 #Removing species according to their degree
 ants.extlower.d <- second.extinct(ants, participant="lower", method="degree", nrep=100, details=FALSE)
