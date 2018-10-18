@@ -344,5 +344,5 @@ slope.bipartite(ants.extlower.d, pch=19, cex=0.5)
 
 
 #########################################################################
-Now you are ready to explore other parameters of the networks and play with your drawing. Networks are a world of possibilities. Be creative and you will succeed!! 
+Now you are ready to explore other parameters of the networks and play with your drawings. Networks are a world of possibilities. Be creative and you will succeed!! 
 #########################################################################
