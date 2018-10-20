@@ -13,10 +13,10 @@ Curso de Introdução à Teoria de Redes Ecológicas
 Todas as espécies interagem com alguma outra espécie na natureza. Nessa prática os alunos coletarão dados sobre interações mutualísticas na natureza (ex. formiga-planta, dispersor de semente-planta, polinizador-planta) e/ou utilizarão dados próprios ou da literatura para analisar métricas básicas de redes complexas.
 
 No final do curso o aluno será capaz de: 
-1) Visualizar uma rede de interações 
-2) Testar se rede é a conectada, modular ou aninhada com modelos nulos
+1) Desenhar uma rede de interações com diferentes pacotes
+2) Testar se rede é a conectada, modular ou aninhada com uso de modelos nulos
 3) Identificar a centralidade dos nodos
-3) Explorar a estrutura da rede e seu significado biológico
+4) Explorar a estrutura da rede, robustez e seu significado biológico
 
 ##########################################################################
 __________________________________________________________________________
@@ -26,7 +26,7 @@ Warning 2: there is no single magic way to draw all kinds of network.
 There are several network drawing methods implemented in R packages
 and stand-alone software. Study their logic and algorithms,
 see some papers in which they were used, think it through,
-and only then decide which drawing method to use in your study.(M. Mello)
+and only then decide which drawing method to use in your study (M. Mello).
 
 Warning 3: Null models are an endless discussion in Ecology. The choice of null models depends on your question, but is essential to test the significance of the data. Chose carefully, based on the biological meanings of the randomization process.
 
@@ -223,7 +223,9 @@ Network Structure and null models
 
 ```{r metrics network structure}
 
-### Observe the differences in some metrics for the analyses of netwoks. Run the metrics for other systems, compare the topology among them. What does it mean?
+### Observe the differences in some metrics for the analyses of netwoks. 
+#Run the metrics for other systems, compare the topology among them. 
+#What does it mean?
 
 #### Explore possibilities of different null models in the different packages, for example:
 ??oecosimu
@@ -293,7 +295,7 @@ m_ants
 ```
 
 #################################
-Network centrality
+Centrality
 #################################
 ```{r centrality}
 #### identify the degree, closess and betweenness of your species
@@ -325,10 +327,10 @@ save.image("pratica_redes.RData")
 #dev.off()
 ```
 
-
+###################################
+Robustness
+###################################
 ```{r robustness}
-######################## NETWORK ROBUSTNESS
-
 #This index is based on:
 #Burgos, E., H. Ceva, R.P.J. Perazzo, M. Devoto, D. Medan, M. Zimmermann, and A. Maria Delbue (2007) Why nestedness in mutualistic networks? Journal of Theoretical Biology 249, 307ñ313
 #Slope.bipartite È baseado em 
@@ -346,7 +348,6 @@ robustness(ants.extlower.r)
 slope.bipartite(ants.extlower.r, pch=19, cex=.5)
 #dev.off()
 
-??str.igraph
 
 #Removing species according to their degree
 ants.extlower.d <- second.extinct(ants, participant="lower", method="degree", nrep=100, details=FALSE)
@@ -354,8 +355,6 @@ robustness(ants.extlower.d)
 #png(filename="dispersao1extlower_degree.png", width = 500, height = 500)
 slope.bipartite(ants.extlower.d, pch=19, cex=0.5)
 #dev.off()
-
-
 
 ```
 
