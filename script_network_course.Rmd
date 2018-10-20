@@ -53,7 +53,6 @@ library(reshape2)
 library(igraph)
 library(networkD3)
 library(reshape2)
-library(vegan)
 ```
 
 ```{r input data, echo=T, include = F}
