@@ -1,7 +1,7 @@
 Disclaim.
 
 
-This is part of the material used in the "Introductory Course to Network Ecology" which is available to be offered to postgraduation courses in Biology and Ecology - please contact me if you have interest. In this course, the students are guided to the first steps to apply network science to answer ecological questions, from theory to practice.
+This is part of the material used in the "Introductory Course to Network Ecology", which is available to be offered to academic and non-academic courses in Biology and Ecology - please contact me if ou would like to take this course to your institution. Here, the students are guided to the first steps to apply network science to answer timely ecological questions, from theory to practice.
 
 
 You may use this material freely but be aware it may be constantly updated. I am not responsabile for any possible code issues or misleadind interpretations. Yet I am happy to discuss any question regarding to it. 
