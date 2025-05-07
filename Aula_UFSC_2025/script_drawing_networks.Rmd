@@ -1,0 +1,357 @@
+---
+title: "script_drawing_networks"
+author: "Carine Emer"
+date: "2025-05-07"
+output: html_document
+---
+
+###------------------- Ecological Networks
+### Script for Hands-on class 1 - Drawing Networks
+### by Carine Emer
+### February 2023, updated May 2025
+
+#### Download the most recent version of RStudio, R and packages before starting it.
+
+# Goals: ----
+# 1 - draw binary and weighted networks using different packages (bipartite, igraph, 
+#network3D); 
+# 2 - understand basic codes and functions;
+# 3 - identify network structure and components
+
+## Further nice material for network visualization can be found at:
+# https://kateto.net/network-visualization
+# and interesting discussions about theory and metrics at:
+# https://web.archive.org/web/20210512085410/http://www.scottbot.net/HIAL/index.html@p=6279.html
+
+## install packages
+install.packages("bipartite", dependencies=T) #
+
+# load packages
+library(bipartite); library(vegan);library(reshape2)
+library(igraph); library(networkD3);
+library(bipartiteD3)
+
+# set your directory - where script and datasets are saved
+#setwd("paste your working directory path here")
+setwd("/Users/carineemer/Network_Course_github/Aula_UFSC_2025/dataset")
+
+### import the data - you can use the dataset available or your own data. 
+#To do so, just #replace "the name within brackets" below by your won input file.
+
+#load("pratica1_desenho_redes.RData")
+
+```{r import data}
+### Binary networks - qualitative data
+poll_b<-read.csv("pollination_NewZealand_bin.csv", head=T,row.names=1)
+ants_b<-read.csv("ants_Amazon_bin.csv", head=T,row.names=1)
+seed_b<-read.csv("seed_dispersal_AtlanticForest_bin.csv", head=T,row.names=1)
+
+###### Weighted networks - quantitative data
+poll<-read.csv("pollination_NewZealand.csv", head=T,row.names=1)
+ants<-read.csv("ants_Amazon.csv", head=T,row.names=1)
+seed<-read.csv("seed_dispersal_AtlanticForest.csv", head=T,row.names=1)
+
+```
+
+
+
+##### check the data - always!
+View(ants)
+dim(ants) #size of the network
+str(ants) # structure of the network
+
+
+# Package bipartite - the classic! ----
+#### Goal: to observe the topological differences between binary and weighted networks
+#and the differences among systems
+
+### bipartite:plotweb function ----
+
+#### Invaded pollination network from a sub-alpine vegetation, New Zealand 
+#(Emer et al. 2016. DOI: 10.1111/ddi.12458)
+plotweb(poll) # using default arguments
+
+plotweb(ants,  ## adjusting arguments         
+                      text.rot=c(90), labsize=1,arrow="down.center",
+                      y.width.low=0.05,y.width.high=0.05, 
+                      ybig=1.8, low.y=1.2, high.y=2,
+                      high.spacing=.01, low.spacing=0.01,
+                      # for shorter labels:
+                      #high.lablength=3, low.lablength=0, 
+                      method="cca", ### check the method you prefer
+                      ### set colors
+                      col.low="pink", col.high="blue", 
+                      col.interaction = "gray80")
+dev.off() # good practice - always clean the plot area
+
+
+#### Network of ant-myrmecophyte interactions from a dam-fragmented island in Balbina, Central Amazon 
+#(Emer et al. 2013. DOI: 10.1111/cobi.12045).
+
+# vectors for all colours can be given, to mark certain species or 
+# interactions. Colour vectors are recycled if not of appropriate length - BE CAREFULL
+# colors are given according to the number of the cells in the matrix/dataframe (rows x cols). 
+#It is counted from left to right, up-to-down
+# for example, 
+#lets color the interaction between Cordia nodosa and Azteca sp5 as blue,
+#creating a vector for that. 
+
+# check size of the network by multiplying the n of rows and columns
+dim(ants) # 11*15 = 165
+#check the position of the interaction of interest, and create the corresponding vector
+my.col<-c(rep("white",33),rep("blue",1),rep("white",131))   #here, the target of interaction is at the cell 34              
+
+plotweb(ants,text.rot=c(90),            
+                      labsize=1,y.width.low=0.05,y.width.high=0.05,
+                      arrow="down.center",ybig=1.8, low.y=1.2, 
+                      high.y=2, high.spacing=.01, low.spacing=0.01,
+                      method="cca",
+                      col.interaction = my.col)
+dev.off()
+
+
+#### Avian seed-dispersal network from Ilha Anchieta, Atlantic Forest 
+#(Emer et al. 2019. DOI 10.1111/btp.12738)
+
+#export the image, adjust format and resolution
+tiff(filename= "ntw_seed_dispersal.tiff",
+   units = "px", 
+  res= 300, 
+ height= 2000, width= 3000) 
+
+seed_network<-plotweb(seed,text.rot=c(90),labsize=1,
+                      y.width.low=0.05,y.width.high=0.05,
+                      arrow="down.center",ybig=1.8, 
+                      low.y=1.2, high.y=2, high.spacing=.01, low.spacing=0.01,
+                      method="cca", ### check the method if you prefer
+                      col.low="cyan4", col.high="magenta4", 
+                      col.interaction = "grey80")
+
+dev.off()
+
+
+# Tip: There are many other parameters that can be set to customize the drawings.
+# Explore them and have fun plotting!
+
+##### bipartite: visweb function ----
+# from https://rdrr.io/cran/bipartite/man/visweb.html
+# observe the differences among the setting parameters
+# can you tell whether it is a modular or nested structure?
+
+visweb(ants_b)
+visweb(ants, type="nested", square="interaction", text="none", 
+       frame=TRUE) 
+visweb(ants, type="nested", text="compartment")
+visweb(ants, circles=TRUE,  boxes=FALSE,  
+       labsize=1, circle.max=2,  text="no")
+visweb(ants,square="b",box.col="red",box.border="black")
+
+
+#define your colors here,length has to be the numbers of different entries
+cols <-0:(length(table(ants_b))-1) 
+visweb(ants_b, square="defined", def.col=cols) 
+
+dev.off()
+
+
+###### tri-trophic networks ----
+#for examples of tri-trophic interactions and how to add abundances 
+#in the axis see "script_visual_Gruber_Safariland.R" 
+#(https://rdrr.io/cran/bipartite/man/plotweb.html)
+
+# Package bipartite3D ----
+
+ants1<-melt(as.matrix(ants)) # create an edge list
+ants1 <- subset(ants1, value>0) ## remove non-existent interactions
+ants1$webID <- c(rep("Ant-myrmecophyte network 3D"))
+
+colnames(ants1)[1]<-"lower"
+colnames(ants1)[2]<-"higher"
+colnames(ants1)[3]<-"freq"
+
+bipartite::frame2webs(ants1)-> ntw3d
+
+ants3D<-bipartite_D3(ntw3d, PrimaryLab = 'Plants',
+                     SecondaryLab = 'Ants',
+                     colouroption = 'brewer',
+                     Orientation = 'vertical', ColourBy = 1,
+                     MainFigSize = c(800, 1500), 
+                     filename = 'demo1')
+
+ants3D
+saveNetwork(ants3D, file = "ntw_ants_bip3D.html") 
+dev.off()
+
+
+# Package igraph - the fancy one! ----
+??str.igraph # help if needed
+# nice codes and examples at 
+#  https://r-graph-gallery.com/network.html
+#  https://kateto.net/netscix2016.html
+
+## import the data - note that here we do not set 'row.names = 1',as on the bipartite example
+m<- read.csv("ants_Amazon.csv", head=T)
+
+# import a file with the traits to be graphed
+clos<-read.csv("closeness_ants.csv", head=T)
+head(clos)
+str(clos)
+
+# transforms the column to a list of character strings
+clos$species <- as.character(clos$species) 
+clos$guild<-as.character(clos$guild) 
+
+## transform to an edgelist - note the structure of the list of interactions
+m1<-melt(m) 
+head(m1)
+
+m2 <- subset(m1, value>0) ## select only interactions > 0
+head(m2)
+
+# sets the graph framework
+g=graph_from_data_frame(m2, directed=FALSE) 
+
+#Check the main properties of the igraph object
+g # U = undirected, N = named graph, 26 nodes/vertexes (11 rows + 15 col), 20 interactions/edges
+V(g)
+E(g)
+V(g)$name
+
+# Find nodes and edges by attribute:
+V(g)[name=="Cordia nodosa"]
+
+# ordering clos so that the order of species list matches the order of species in graph g
+clos <- clos[order(match(clos$species, V(g)$name)),] 
+
+# create a colour vector for each species
+closeness.col <- heat.colors(25)[as.numeric(cut(-clos$closeness, breaks = 25))] 
+
+## create a vector for guild
+V(g)$shape=as.character(clos$guild)
+V(g)$shape[V(g)$shape=="ant"]="circle"
+V(g)$shape[V(g)$shape=="plant"]="square"
+
+#export the image as you wish
+#tiff("ntw_name.tiff", width=1024, height=800)
+#pdf("ntw_name.pdf")
+#png("ntw_name.png", width=1024, height=800)
+
+plot(g,
+     layout= layout_nicely, # try different layouts
+     main='Ant-myrmecophyte network',      # Set title
+     # Set node attributes
+     vertex.color= closeness.col,
+     vertex.shape=V(g)$shape,
+     vertex.label=NA,
+     vertex.label.color='black',
+     vertex.label.font=1,
+     vertex.label.cex=1,
+     vertex.size=igraph::degree(g)*3,
+     # Set edges
+     edge.curved = 0.3,
+     edge.color = "lightblue3"
+)
+
+legend(x=-1, y=-0.8, c("Plant species (n = 11)",
+                     "Ant species (n = 16)",
+                     "Node size = log(k)"), 
+       pch=c(16,15,1), 
+       col = c("dark green","tomato","black"), 
+       pt.cex=.6, cex=1, bty="n", ncol=1)
+
+
+dev.off()
+
+## Identify communities ----
+# Community detection (by optimizing modularity over partitions):
+clp <- cluster_optimal(g)
+class(clp)
+
+#returns an object of class "communities" 
+plot(clp, g,
+     vertex.label=NA)
+
+dev.off()
+
+
+# Package network3D ----
+
+n3D<-simpleNetwork(m2) # 
+n3D
+saveNetwork(n3D, file = "ntw_ants_network3D.html") ### save network as html
+
+## Find modularity ----
+# Find group membership
+wt <- cluster_walktrap(g, steps = 16)
+members <- membership(wt)
+# Convert igraph to list for networkD3
+sj_list <- igraph_to_networkD3(g, group = members)
+
+# Plot as a forceDirected Network
+ants_ntw_anim<-forceNetwork(Links = sj_list$links, Nodes = sj_list$nodes, Source = 'source',
+                         Target = 'target', NodeID = 'name', Group = 'group',
+                         zoom = TRUE, linkDistance = 50,opacity=1.2)
+colourScale = "d3.scale.category20f()"
+ants_ntw_anim
+saveNetwork(ants_ntw_anim, file = "ntw_ants_network3D_colour.html") ### save network as html
+
+dev.off()
+
+
+
+save.image("script_day1.RData") # save your objects for next time
+
+# extras ----
+
+library(ggraph)
+library(animation) 
+
+l <- layout_with_lgl(g)
+
+saveGIF( {  col <- rep("grey40", vcount(g))
+plot(g, vertex.color=col, layout=l,
+     vertex.shape=V(g)$shape,
+     vertex.size = 12,
+     vertex.color = closeness.col,
+     edge.color = "lightblue",
+     edge.curved=0.3,
+     vertex.label.dist=200
+)
+
+step.1 <- V(g)[name=="Cordia nodosa"]
+col[step.1] <- "#ff5100"
+plot(g, vertex.color=col, layout=l,
+          vertex.shape=V(g)$shape,
+          vertex.size = 12,
+          vertex.color = closeness.col,
+          edge.color = "lightblue",
+          edge.curved=0.3,
+          vertex.label.dist=200
+     )
+
+step.2 <- unlist(neighborhood(g, 1, step.1, mode="out"))
+col[setdiff(step.2, step.1)] <- "#ff9d00"
+plot(g, vertex.color=col, layout=l,
+     vertex.shape=V(g)$shape,
+     vertex.size = 12,
+     vertex.color = closeness.col,
+     edge.color = "lightblue",
+     edge.curved=0.3,
+     vertex.label.dist=200
+)
+
+step.3 <- unlist(neighborhood(g, 2, step.1, mode="out"))
+col[setdiff(step.3, step.2)] <- "#FFDD1F"
+plot(g, vertex.color=col, layout=l,
+     vertex.shape=V(g)$shape,
+     vertex.size = 12,
+     vertex.color = closeness.col,
+     edge.color = "lightblue",
+     edge.curved=0.3,
+     vertex.label.dist=200
+)  },
+
+interval = .1, movie.name="network_animation.gif" )
+
+
+save.image("script_day1.RData") # save your objects for next time

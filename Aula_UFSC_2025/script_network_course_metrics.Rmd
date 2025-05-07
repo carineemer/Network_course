@@ -1,0 +1,334 @@
+---
+title: "Redes Complexas: Análises Básicas"
+author: "Carine Emer"
+date: "11/10/2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+#######################################################################
+
+Curso de Introdução à Teoria de Redes Ecológicas - Métricas
+
+#########################################################################
+
+
+```{r setup, echo=T, include = F}
+# Set the working directory
+#setwd("paste your working directory path here")
+#setwd("~/Documents/Documents - Girassol/Network course/Curso Redes UESC 2018/práticas R/data")
+
+```
+
+
+```{r load packages, include = F, echo = T}
+# load packages
+library(bipartite)
+library(vegan)
+library(reshape2)
+library(igraph)
+library(networkD3)
+library(reshape2)
+```
+
+```{r input data, echo=T, include = F}
+### input data
+
+### you can use the dataset available or your own data. To do so, just replace "the name within brackets" below for your won.
+
+### Binary networks - qualitative data
+poll_b<-read.csv("pollination_NewZealand_bin.csv", head=T,row.names=1)
+ants_b<-read.csv("ants_Amazon_bin.csv", head=T,row.names=1)
+seed_b<-read.csv("seed_dispersal_AtlanticForest_bin.csv", head=T,row.names=1)
+
+
+###### Weighted networks - quantitative data
+poll<-read.csv("pollination_NewZealand.csv", head=T,row.names=1)
+ants<-read.csv("ants_Amazon.csv", head=T,row.names=1)
+seed<-read.csv("seed_dispersal_AtlanticForest.csv", head=T,row.names=1)
+
+##### check data
+poll
+dim(poll)
+str(poll)
+
+```
+
+
+#################################
+Network Structure and null models 
+#################################
+
+```{r metrics network structure}
+
+### Observe the differences in some metrics for the analyses of networks. 
+#Run the metrics for other systems, compare the topology among them. 
+#What does it mean?
+
+#### Explore possibilities of different null models in the different packages, for example:
+??oecosimu
+??vegan::commsim
+??nullmodel
+
+############## Degree distribution##########################
+#??degreedistr ## check the help for some limitations of this method
+
+poll.dd <- degreedistr(poll)
+poll.dd
+#Dark grey: exponential, decays quickly — nodes with high degree are extremely rare, resulting in a more homogeneous network. Example: Erdős–Rényi random network.
+#Medium grey: power law (straight line), decays slowly — many nodes with low degree, a few with very high degree (hubs).Example: The World Wide Web, scale-free.
+#Light grey: truncated power law, most ecological networks - looks like a power law at first, but decays faster at higher degrees. Limited scale-free.
+
+
+############################## CONNECTANCE #####################
+obs_c<-networklevel(ants, index="connectance")
+# Set Null Model
+null_r2d<-oecosimu(ants,networklevel, "r2d", index="connectance",nsim=100)
+null_r2d
+densityplot(permustats(null_r2d))
+
+
+############################ NESTEDNESS ########################## 
+nested_ants<-networklevel(ants, index = "weighted NODF")
+nested_ants
+
+# Generate null distribution using quasiswap algorithm
+null1_quasi <- oecosimu(ants, nestednodf, method = "quasiswap_count", nsimul = 100, order = FALSE)
+
+# Plot null distribution (quasiswap)
+densityplot(permustats(null1_quasi))
+
+#### Using the classical nullmodels for bipartite
+## method 3 = vaznull, explore other possibilities and discuss when to chose one or another
+
+# Generate classical null models (method 3 = vaznull)
+null_models <- nullmodel(ants, N = 100, method = 3)
+null1 <- sapply(null_models, nested, method = "NODF2")
+
+# Compute summary stats
+mean_null <- mean(null1, na.rm = TRUE)
+sd_null <- sd(null1, na.rm = TRUE)
+
+# Z-score and p-value
+z_score <- (obs_nested - mean_null) / sd_null
+p_value <- sum(null1 >= obs_nested) / length(null1)  # dividing by 100
+
+# Print results
+z_score
+p_value
+
+# Plot classical null distribution
+plot(density(null1), lwd = 2, xlim = c(0, 40),
+     main = "Null distribution of nestedness (method 3)",
+     xlab = "Nestedness (NODF2)")
+abline(v = obs_nested, col = "red", lwd = 2)
+legend("topright", legend = "Observed", col = "red", lwd = 2)
+
+
+############################ MODULARITY ########################## 
+m_ants<-computeModules(ants)
+m_ants
+
+  # Check the components of each module
+    printoutModuleInformation(m_ants)
+    plotModuleWeb(m_ants)
+  
+# Set Null Model
+nulls <- nullmodel(ants, N=100, method=1) 
+modules.nulls <- sapply(nulls, computeModules)
+like.nulls <- sapply(modules.nulls, function(x) x@likelihood)
+
+# calculate the stats
+z <- (m_ants@likelihood - mean(like.nulls))/sd(like.nulls)
+p <- 2*pnorm(-abs(z))
+    
+# plot distributions    
+plot(density(like.nulls), lwd=2, xlim=c(0, .8))
+abline(v=m_ants@likelihood, col="red", lwd=1)
+   
+#save.image("pratica_redes.RData")
+```
+
+#################################
+Centrality - species level analyses
+#################################
+```{r centrality}
+
+#### identify species' role within the network structure by estimating degree, closeness and betweenness (Martin-Gonzalez et al. 2010, Ecological Complexity doi:10.1016/j.ecocom.2009.03.008)
+
+## To test different indexes, you just have to change the index parameter. Level defines whether the index is calculated for the rows (lower) or columns (higher).
+
+### grau
+k_ants<-specieslevel(ants_b,index = "degree",level = "higher")
+k_plants<-specieslevel(ants_b,index = "degree",level = "lower")
+
+######## ---- species strength
+str_plants<-specieslevel(ants_b,index = "species strength",level = "lower")
+str_ants<-specieslevel(ants_b,index = "species strength",level = "lower")
+
+
+### betweenness
+btw_ants<-specieslevel(ants_b,index = "betweenness",level = "higher")
+btw_plants<-specieslevel(ants_b,index = "betweenness",level = "lower")
+
+### closenness
+clo_ants<-specieslevel(ants_b,index = "closeness",level = "higher")
+clo_plants<-specieslevel(ants_b,index = "closeness",level = "lower")
+
+### Explore other indexes by yourself by calling the help of 'specieslevel' function
+
+# which other metrics can be useful to your study system?
+
+
+
+########## Estimating hubs and connectors according to Olensen et al. 2007, PNAS. ----
+cz <- czvalues(m_ants)
+plot(cz[[1]], cz[[2]], pch=16, xlab="c, participation coefficient P", ylab="z, within-module degree", cex=0.8, xlim=c(-1,2.5), las=1, ylim= c(-1.5,4))
+abline(v=0.62) # threshold of Olesen et al. 2007
+abline(h=2.5)   # dito
+text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.7)
+
+
+
+################### adjusting cz thresholds ----
+## para quem quiser explorar mais sobre o papel das espécies na rede usando Olensen et al. 2007, PNAS.
+
+## Calcular os valores de c (Among-module connectivity) & z (Within-module connectivity) 
+
+# Z -> its position compared with other species in its own module and how well it connects to species in other modules.
+# C -> its among-module connectivity, i.e., how i is positioned with respect to all modules
+
+# sort species into peripherals, connectors, module hubs, and network hubs
+# Os 3 ultimos s?o generalistas
+
+##  Primeiro calcular Modularidade [Dormann & Strauss 2013]
+mod <- computeModules(seed, steps=1E4) 
+
+## Calcular os valores de c (Among-module connectivity) & z (Within-module connectivity) 
+
+# nivel trofico superior
+cz <- czvalues(mod, weighted=T, level="higher") # objeto com os valores de c & Z 
+
+#null models to calculate critical levels for weighted c/z values (thanks Jamie Stavert! @jstavert)
+
+
+# criando o modelo nulo da sua matriz
+nullnet <- nullmodel(seed, N=10, method=3) #as above
+
+#calculando a modularidade e modelos nulos
+modules.nulls <- sapply(nullnet, computeModules) #as above
+
+#modelos nulos dos Cz values para higher
+cz.nulls <- sapply(modules.nulls, czvalues, weighted=TRUE,level="higher")
+
+c.nulls <- as.data.frame(unlist(cz.nulls[1,]))
+colnames(c.nulls)[1] <- "cval"
+c.crit <- quantile(c.nulls$cval,probs=c(0.975))
+c.crit
+
+
+# valores de z
+z.nulls <- as.data.frame(unlist(cz.nulls[2,]))
+colnames(z.nulls)[1] <- "zval"
+z.nulls <- na.omit(z.nulls)
+z.crit <- quantile(z.nulls$zval,probs=c(0.975))
+z.crit
+
+
+par(mfrow=c(1,2)) #2 plots no mesmo painel
+
+plot(cz[[1]], cz[[2]], pch=17, xlab="Among-module connectivity, c", ylab="Within-module connectivity, z", cex=1, xlim=c(0,1.3), ylim=c(-2,3),las=1, main="Dispersores")
+
+abline(v=0.77, col="red") 
+
+abline(h=1.89, col="red") 
+
+text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.4) #nome das spp
+
+
+## Nivel trofico inferior
+
+cz <- czvalues(mod, weighted=T, level="lower") # objeto com os valores de c & Z 
+
+#null models to calculate critical levels for weighted c/z values (thanks Jamie Stavert! @jstavert)
+
+#Saunders & Rader (2019)_Network modularity influences plant reprodution
+
+nullnet <- nullmodel(seed, N=5, method=3) #as above
+modules.nulls <- sapply(nullnet, computeModules) #as above
+cz.nulls <- sapply(modules.nulls, czvalues, weighted=TRUE,level="lower")
+
+c.nulls <- as.data.frame(unlist(cz.nulls[1,]))
+colnames(c.nulls)[1] <- "cval"
+c.crit <- quantile(c.nulls$cval,probs=c(0.975))
+c.crit # limiar de C
+
+
+z.nulls <- as.data.frame(unlist(cz.nulls[2,]))
+colnames(z.nulls)[1] <- "zval"
+z.nulls <- na.omit(z.nulls)
+z.crit <- quantile(z.nulls$zval,probs=c(0.975))
+z.crit
+
+
+plot(cz[[1]], cz[[2]], pch=10, xlab="Among-module connectivity, c", ylab="Within-module connectivity, z", cex=1, xlim=c(0,1.3), ylim =c (-2,3),las=1,  main="Plantas")
+
+abline(v=0.76, col="red") 
+
+abline(h=1.31, col="red") 
+
+text(cz[[1]], cz[[2]], names(cz[[1]]), pos=4, cex=0.3)
+
+
+# Exportar os valores de c (Among-module connectivity) & z (Within-module connectivity) para nivel inferior
+
+czvalues(mod, weighted=T, level="lower")
+redeL.cz <- czvalues(mod, weighted=T, level="lower")
+write.table(redeL.cz, "czlower.net.txt", sep="\t", quote=F)
+
+
+##Exportar os valores de c (Among-module connectivity) & z (Within-module connectivity) para nivel superior
+
+czvalues(mod, weighted=T, level="higher")
+redeH.net <- czvalues(mod, weighted=T, level="higher")
+#write.table(redeH.net, "czhigher.net.txt", sep="\t", quote=F)
+
+
+dev.off()
+
+
+```
+
+###################################
+Robustness
+###################################
+```{r robustness}
+#This index is based on:
+#Burgos, E., H. Ceva, R.P.J. Perazzo, M. Devoto, D. Medan, M. Zimmermann, and A. Maria Delbue (2007) Why nestedness in mutualistic networks? Journal of Theoretical Biology 249, 307ñ313
+#Slope.bipartite È baseado em 
+#Memmott, J., Waser, N. M. and Price, M. V. (2004) Tolerance of pollination networks to species extinctions. Proceedings of the Royal Society B 271, 2605ñ2611
+## However, there are many implications on using it, mainly because it does consider rewiring. Check the literature for updates.
+
+
+#Removing species randomly
+par(mfrow=c(1,2))
+#retirada aleatória
+ants.extlower.r <- second.extinct(ants, participant="lower", 
+                                        method="random", nrep=100, details=FALSE)
+robustness(ants.extlower.r)
+#png(filename="dispersao1extlower_random.png", width = 500, height = 500)
+slope.bipartite(ants.extlower.r, pch=19, cex=.5)
+#dev.off()
+
+
+#Removing species according to their degree
+ants.extlower.d <- second.extinct(ants, participant="lower", method="degree", nrep=100, details=FALSE)
+robustness(ants.extlower.d)
+#png(filename="dispersao1extlower_degree.png", width = 500, height = 500)
+slope.bipartite(ants.extlower.d, pch=19, cex=0.5)
+
+save.image("pratica_metricas.RData")
+#dev.off()
+
+```
+
