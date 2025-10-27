@@ -1,0 +1,151 @@
+Source,Target,Weight
+Angelica sylvestris,Chlorops hypostigma,1
+Angelica sylvestris,Ectemnius lituratus,5
+Angelica sylvestris,Hemiptera 1,2
+Angelica sylvestris,Meliscaeva cinctella,1
+Angelica sylvestris,Moridae nymph,2
+Angelica sylvestris,Phaonia basalis,9
+Apis mellifera,Circaea lutetiana pollen,1
+Apis mellifera,Cirsium sp. Pollen,1
+Apis mellifera,Eupatorium cannabinum pollen,4
+Apis mellifera,Heracleum sphondylium pollen,1
+Apis mellifera,Impatiens glandulifera pollen,106669
+Apis mellifera,Lythrum salicaria pollen,6
+Apis mellifera,Rubus fruticosus pollen,4
+Apis mellifera,Rununculus sp. Pollen,3
+Apis mellifera,Rununculus sp. Pollen,1
+Apis mellifera,Unknown pollen,12
+Bombus hortorum,Cirsium sp. Pollen,1
+Bombus hortorum,Heracleum sphondylium pollen,7
+Bombus hortorum,Impatiens glandulifera pollen,6665
+Bombus hortorum,Rubus fruticosus pollen,266
+Bombus hortorum,Unknown pollen,15
+Bombus lucorum,Eupatorium cannabinum pollen,1
+Bombus lucorum,Impatiens glandulifera pollen,7385
+Bombus lucorum,Unknown pollen,6
+Bombus pascuorum,Epilobium sp. Pollen,2
+Bombus pascuorum,Eupatorium cannabinum pollen,1
+Bombus pascuorum,Filipendula ulmaria pollen,4
+Bombus pascuorum,Geranium robertianum pollen,2
+Bombus pascuorum,Heracleum sphondylium pollen,1
+Bombus pascuorum,Impatiens glandulifera pollen,51696
+Bombus pascuorum,Rubus fruticosus pollen,58
+Bombus pascuorum,Rununculus sp. Pollen,2
+Bombus pascuorum,Senecio spp. Pollen,2
+Bombus pascuorum,Unknown pollen,15
+Bombus pratorum,Heracleum sphondylium pollen,3
+Bombus pratorum,Impatiens glandulifera pollen,2
+Bombus pratorum,Rubus fruticosus pollen,153
+Bombus pratorum,Unknown pollen,6
+Byturus tomentosus,Angelica sylvestris pollen,1
+Byturus tomentosus,Anthriscus sylvestris pollen,3
+Byturus tomentosus,Cirsium sp. Pollen,4
+Byturus tomentosus,Geranium robertianum pollen,2
+Byturus tomentosus,Heracleum sphondylium pollen,33
+Byturus tomentosus,Impatiens glandulifera pollen,6
+Byturus tomentosus,Lamiaceae pollen,7
+Byturus tomentosus,Rubus fruticosus pollen,445
+Byturus tomentosus,Rununculus sp. Pollen,2
+Byturus tomentosus,Unknown pollen,3
+Calliphora vomitoria,Calystegia sepium pollen,1
+Calliphora vomitoria,Heracleum sphondylium pollen,2
+Calliphora vomitoria,Rubus fruticosus pollen,31
+Calocoris stysi,Heracleum sphondylium pollen,1
+Calocoris stysi,Rubus fruticosus pollen,86
+Cheilosia soror,Heracleum sphondylium pollen,3
+Cheilosia soror,Impatiens glandulifera pollen,1
+Chlorops hypostigma,Angelica sylvestris pollen,4
+Circaea lutetiana,Parascaptomyza pallida,1
+Ectemnius lituratus,Angelica sylvestris pollen,460
+Ectemnius lituratus,Heracleum sphondylium pollen,37
+Ectemnius lituratus,Impatiens glandulifera pollen,45
+Ectemnius lituratus,Rubus fruticosus pollen,16
+Ectemnius lituratus,Rununculus sp. Pollen,1
+Ectemnius lituratus,Senecio spp. Pollen,6
+Ectemnius lituratus,Unknown pollen,47
+Epistrophe grassulariae,Heracleum sphondylium pollen,4
+Epistrophe grassulariae,Impatiens glandulifera pollen,1
+Epistrophe grassulariae,Rubus fruticosus pollen,409
+Episyrphus balteatus,Cirsium sp. Pollen,3
+Episyrphus balteatus,Heracleum sphondylium pollen,110
+Episyrphus balteatus,Impatiens glandulifera pollen,11
+Episyrphus balteatus,Rubus fruticosus pollen,1469
+Episyrphus balteatus,Unknown pollen,1
+Eristalis pertinax,Angelica sylvestris pollen,32
+Eristalis pertinax,Impatiens glandulifera pollen,39
+Eristalis pertinax,Rubus fruticosus pollen,513
+Eupatorium cannabinum,Meligethes aeneus,3
+Eusphalerum luteum,Cirsium sp. Pollen,1
+Eusphalerum luteum,Heracleum sphondylium pollen,6
+Eusphalerum luteum,Impatiens glandulifera pollen,142
+Eusphalerum luteum,Rubus fruticosus pollen,37
+Hemiptera 1,Angelica sylvestris pollen,1
+Hemiptera 1,Impatiens glandulifera pollen,33
+Hemiptera nymph,Arctium sp. Pollen,1
+Hemiptera nymph,Hedera helix pollen,3
+Hemiptera nymph,Impatiens glandulifera pollen,1
+Hemiptera nymph,Rubus fruticosus pollen,62
+Heracleum sphondylium,Calliphora vomitoria,3
+Heracleum sphondylium,Cheilosia soror,2
+Heracleum sphondylium,Ectemnius lituratus,8
+Heracleum sphondylium,Episyrphus balteatus,3
+Heracleum sphondylium,Eristalis pertinax,1
+Heracleum sphondylium,Holoclera flava,2
+Heracleum sphondylium,Lyciella rorida,1
+Heracleum sphondylium,Meliscaeva cinctella,4
+Holoclera flava,Impatiens glandulifera pollen,3
+Holoclera flava,Rununculus sp. Pollen,1
+Impatiens glandulifera,Apis mellifera,29
+Impatiens glandulifera,Bombus hortorum,5
+Impatiens glandulifera,Bombus lucorum,3
+Impatiens glandulifera,Bombus pascuorum,29
+Impatiens glandulifera,Eusphalerum luteum,2
+Impatiens glandulifera,Phaonia basalis,7
+Melanostoma scalare,Cirsium sp. Pollen,1
+Melanostoma scalare,Filipendula ulmaria pollen,125
+Melanostoma scalare,Heracleum sphondylium pollen,2
+Melanostoma scalare,Lamiaceae pollen,1
+Melanostoma scalare,Unknown pollen,2
+Meligethes aeneus,Eupatorium cannabinum pollen,48
+Meligethes aeneus,Filipendula ulmaria pollen,1
+Meligethes aeneus,Heracleum sphondylium pollen,2
+Meligethes aeneus,Impatiens glandulifera pollen,3
+Meligethes aeneus,Rubus fruticosus pollen,433
+Meliscaeva cinctella,Cirsium sp. Pollen,2
+Meliscaeva cinctella,Heracleum sphondylium pollen,45
+Meliscaeva cinctella,Impatiens glandulifera pollen,30
+Meliscaeva cinctella,Rubus fruticosus pollen,17
+Moridae nymph,Heracleum sphondylium pollen,1
+Moridae nymph,Impatiens glandulifera pollen,11
+Orthotylus/Lygocorus,Cirsium sp. Pollen,1
+Orthotylus/Lygocorus,Hedera helix pollen,8
+Orthotylus/Lygocorus,Rununculus sp. Pollen,5
+Orthotylus/Lygocorus,Senecio spp. Pollen,7
+Orthotylus/Lygocorus,Trifoliumspp. Pollen,22
+Orthotylus/Lygocorus,Unknown pollen,3
+Parasitica,Rubus fruticosus pollen,1
+Parasitica,Unknown pollen,3
+Phaonia basalis,Angelica sylvestris pollen,260
+Phaonia basalis,Eupatorium cannabinum pollen,5
+Phaonia basalis,Hedera helix pollen,25
+Phaonia basalis,Heracleum sphondylium pollen,24
+Phaonia basalis,Impatiens glandulifera pollen,267
+Phaonia basalis,Rubus fruticosus pollen,3
+Phaonia basalis,Rununculus sp. Pollen,3
+Phaonia basalis,Unknown pollen,14
+Platycheirus albimanus,Rubus fruticosus pollen,9
+Platycheirus albimanus,Unknown pollen,3
+Ranunculus sp.,Melanostoma scalare,5
+Rubus fruticosus,Bombus hortorum,6
+Rubus fruticosus,Bombus pratorum,4
+Rubus fruticosus,Byturus tomentosus,13
+Rubus fruticosus,Epistrophe grassulariae,3
+Rubus fruticosus,Episyrphus balteatus,10
+Rubus fruticosus,Eristalis pertinax,2
+Rubus fruticosus,Eusphalerum luteum,5
+Rubus fruticosus,Hemiptera nymph,4
+Rubus fruticosus,Meligethes aeneus,4
+Rubus fruticosus,Orthotylus Lygocorus,6
+Rubus fruticosus,Parasitica,2
+Rubus fruticosus,Platycheirus albimanus,2
+Rumex sp.,Calocoris stysi,2
